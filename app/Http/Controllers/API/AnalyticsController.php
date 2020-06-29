@@ -30,6 +30,7 @@ class AnalyticsController extends Controller
     }
 
     /**
+     * Updates analytic for the property
      * @param Request $request
      * @param Property $property
      * @param Analytic $analytic
@@ -47,6 +48,7 @@ class AnalyticsController extends Controller
     }
 
     /**
+     * Lists all analytics for the property
      * @param Request $request
      * @param Property $property
      * @return \App\Http\Resources\AnalyticCollection
@@ -54,6 +56,7 @@ class AnalyticsController extends Controller
     public function index(Request $request, Property $property)
     {
         return new \App\Http\Resources\AnalyticCollection(
+            // added related objects to make sure it's easier to work with, can be optimized
             $property->analytics()->with(['property', 'analyticType'])->getResults()
         );
     }

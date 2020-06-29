@@ -76,3 +76,15 @@ Generated another test and implemented logic for storing, updating and listing a
 docker-compose run --rm artisan make:test AnalyticsTest
 ```
 
+Only summary endpoints are left
+```
+docker-compose run --rm artisan make:test SummaryTest 
+```
+
+At this point I thought, that we shouldn't do any processing inside the DB, since we store values in strings and potentially may have values outside of double precision range.
+I thought of making a background job, that would trigger on property / analytic creation or update and recalculate summary for the same suburb, state, country.
+
+However to calculate median I needed the whole list of values, which may quickly become impractical, unless we maintain separately sorted index of these values (but this is way too complicated for the test assignment).
+
+So I decided to settle with processing inside the DB (casting string values to double precision).
+To speed things up a little on big datasets - we can store results into the cache and only bust that cache when property or analytics gets added / updated.

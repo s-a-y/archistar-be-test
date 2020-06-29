@@ -19,7 +19,7 @@ class AnalyticsTest extends TestCase
     }
 
     /**
-     * Test analytic can be created
+     * Test analytics can be listed
      *
      * @return void
      */

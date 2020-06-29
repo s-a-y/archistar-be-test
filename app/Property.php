@@ -34,6 +34,14 @@ class Property extends Model
                 $property->guid = Uuid::uuid4()->toString();
             }
         });
+
+        static::created(function ($property) {
+            Analytic::bustCache($property);
+        });
+
+        static::updated(function ($property) {
+            Analytic::bustCache($property);
+        });
     }
 
     public function analytics()
