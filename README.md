@@ -88,3 +88,9 @@ However to calculate median I needed the whole list of values, which may quickly
 
 So I decided to settle with processing inside the DB (casting string values to double precision).
 To speed things up a little on big datasets - we can store results into the cache and only bust that cache when property or analytics gets added / updated.
+
+Now main objective has been achieved.
+
+One more thing before we wrap up:
+- added json formatter to logging config and added RequestLogging middleware to log request and response, useful for API debugging
+ 

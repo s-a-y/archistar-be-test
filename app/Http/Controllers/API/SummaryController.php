@@ -28,6 +28,7 @@ class SummaryController extends Controller
             'country' => 'max:255'
         ]);
 
+        // simplistic filter implementation
         $filter = $request->all(['suburb', 'state', 'country']);
         $firstKey = array_key_first($filter);
 
