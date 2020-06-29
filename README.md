@@ -19,11 +19,60 @@ DB_USERNAME=user
 DB_PASSWORD=secret
 ```
 
+```
 docker-compose run --rm composer install
 docker-compose run --rm artisan key:generate
 docker-compose run --rm artisan make:migration ArchistarScheme
+```
 
 Prepared migration and the seed file
 
+```
 docker-compose run --rm artisan migrate
 docker-compose run --rm artisan db:seed
+```
+Modified routes/api to include all required API endpoints
+```
++--------+-----------+------------------------------------------------+------------------+-----------------------------------------------------+------------+
+| Domain | Method    | URI                                            | Name             | Action                                              | Middleware |
++--------+-----------+------------------------------------------------+------------------+-----------------------------------------------------+------------+
+|        | GET|HEAD  | /                                              |                  | Closure                                             | web        |
+|        | POST      | api/properties                                 | properties.store | App\Http\Controllers\API\PropertiesController@store | api        |
+|        | GET|HEAD  | api/properties/{property}/analytics            | analytics.index  | App\Http\Controllers\API\AnalyticsController@index  | api        |
+|        | POST      | api/properties/{property}/analytics            | analytics.store  | App\Http\Controllers\API\AnalyticsController@store  | api        |
+|        | PUT|PATCH | api/properties/{property}/analytics/{analytic} | analytics.update | App\Http\Controllers\API\AnalyticsController@update | api        |
+|        | GET|HEAD  | api/summary                                    | summary.index    | App\Http\Controllers\API\SummaryController@index    | api        |
++--------+-----------+------------------------------------------------+------------------+-----------------------------------------------------+------------+
+```
+
+```
+docker-compose run --rm artisan make:controller API/PropertiesController
+docker-compose run --rm artisan make:controller API/AnalyticsController
+docker-compose run --rm artisan make:controller API/SummaryController
+docker-compose run --rm artisan make:test PropertiesTest
+```
+
+Created models and JSON resources
+
+```
+docker-compose run --rm artisan make:model Property
+docker-compose run --rm artisan make:model AnalyticType
+docker-compose run --rm artisan make:model Analytic
+docker-compose run --rm artisan make:resource Analytic
+docker-compose run --rm artisan make:resource AnalyticCollection
+docker-compose run --rm artisan make:resource Property
+docker-compose run --rm artisan make:resource SummaryCollection
+```
+
+Modified models with fillable properties, relations and had to change table name for Analytic
+
+For Property model added id into hidden fields, as I assumed we only want to show guid to the frontend.
+
+PropertiesController now implements method store, 
+validation rules I pushed into the model itself, as they may be useful in multiple places  
+
+Generated another test and implemented logic for storing, updating and listing analytics
+```
+docker-compose run --rm artisan make:test AnalyticsTest
+```
+
